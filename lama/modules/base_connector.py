@@ -21,6 +21,10 @@ ROBERTA_MASK = "<mask>"
 ROBERTA_START_SENTENCE = "<s>"
 ROBERTA_END_SENTENCE = "</s>"
 ROBERTA_VOCAB_SIZE = 50266
+T5_MASK = "<extra_id_0>"
+T5_UNK = "<extra_id_0>"
+T5_SEP = "<extra_id_0>"
+T5_PAD = "<extra_id_0>"
 
 SPECIAL_SYMBOLS = [
     MASK,
@@ -32,7 +36,8 @@ SPECIAL_SYMBOLS = [
     ELMO_START_SENTENCE,
     ELMO_END_SENTENCE,
     OPENAI_UNK,
-    OPENAI_EOS
+    OPENAI_EOS,
+    T5_MASK
     ]
 
 SPACE_NORMALIZER = re.compile(r"\s+")

@@ -1,0 +1,11 @@
+Functions
+get_id
+if common_vocab_filename not None
+    optimise_top_layer
+    init_indices_for_filter_logprobs
+get_batch_generation
+if vocab_subset not None
+    filter_logprobs
+
+Arrays
+vocab

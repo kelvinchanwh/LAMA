@@ -386,9 +386,12 @@ def main(args, shuffle_data=True, model=None):
         # keep samples as they are
         all_samples = data
 
-    all_samples, ret_msg = filter_samples(
-        model, data, vocab_subset, args.max_sentence_length, args.template
-    )
+    if model_type_name == "t5":
+        ret_msg = ""
+    else:
+        all_samples, ret_msg = filter_samples(
+            model, data, vocab_subset, args.max_sentence_length, args.template
+        )
 
     # OUT_FILENAME = "{}.jsonl".format(args.dataset_filename)
     # with open(OUT_FILENAME, 'w') as outfile:
@@ -468,7 +471,7 @@ def main(args, shuffle_data=True, model=None):
             masked_indices_list,
         ) = model.get_batch_generation(sentences_b, logger=logger)
 
-        if vocab_subset is not None:
+        if vocab_subset is not None and model_type_name != "t5":
             # filter log_probs
             filtered_log_probs_list = model.filter_logprobs(
                 original_log_probs_list, filter_logprob_indices
