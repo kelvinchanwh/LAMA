@@ -687,13 +687,13 @@ def main(args, shuffle_data=True, model=None):
 
     logger.info("\n" + msg + "\n")
     print("\n" + msg + "\n")
-
-    # dump pickle with the result of the experiment
-    all_results = dict(
-        list_of_results=list_of_results, global_MRR=MRR, global_P_at_10=Precision
-    )
-    with open("{}/result.pkl".format(log_directory), "wb") as f:
-        pickle.dump(all_results, f)
+    
+    # # dump pickle with the result of the experiment
+    # all_results = dict(
+    #     list_of_results=list_of_results, global_MRR=MRR, global_P_at_10=Precision
+    # )
+    # with open("{}/result.pkl".format(log_directory), "wb") as f:
+    #     pickle.dump(all_results, f)
 
     return Precision1
 
