@@ -46,13 +46,13 @@ if [[ ! -f bert/uncased_L-24_H-1024_A-16/bert_config.json ]]; then
 fi
 
 echo "BERT BASE MULTILINGUAL LOWERCASED"
-if [[ ! -f bert/cased_L-24_H-1024_A-16/bert_config.json ]]; then
+if [[ ! -f bert/multilingual_L-12_H-768_A-12/bert_config.json ]]; then
   mkdir -p 'bert'
   cd bert
   wget -c "https://storage.googleapis.com/bert_models/2018_11_03/multilingual_L-12_H-768_A-12.zip"
   unzip multilingual_L-12_H-768_A-12.zip
   rm multilingual_L-12_H-768_A-12.zip
-  cd multilingual_L-12_H-768_A-12.zip
+  cd multilingual_L-12_H-768_A-12
   wget -c "https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-multilingual-uncased.tar.gz"
   tar -xzf bert-base-multilingual-uncased.tar.gz
   rm bert-base-multilingual-uncased.tar.gz
@@ -93,13 +93,13 @@ if [[ ! -f bert/cased_L-24_H-1024_A-16/bert_config.json ]]; then
 fi
 
 echo "BERT BASE MULTILINGUAL CASED"
-if [[ ! -f bert/cased_L-24_H-1024_A-16/bert_config.json ]]; then
+if [[ ! -f bert/multi_cased_L-12_H-768_A-12/bert_config.json ]]; then
   mkdir -p 'bert'
   cd bert
   wget -c "https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip"
   unzip multi_cased_L-12_H-768_A-12.zip
   rm multi_cased_L-12_H-768_A-12.zip
-  cd multi_cased_L-12_H-768_A-12.zip
+  cd multi_cased_L-12_H-768_A-12
   wget -c "https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-multilingual-cased.tar.gz"
   tar -xzf bert-base-multilingual-cased.tar.gz
   rm bert-base-multilingual-cased.tar.gz
