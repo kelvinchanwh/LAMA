@@ -22,6 +22,7 @@ from multiprocessing.pool import ThreadPool
 import multiprocessing
 import lama.evaluation_metrics as metrics
 import time, sys
+import gc
 
 
 def load_file(filename):
@@ -571,7 +572,7 @@ def main(args, shuffle_data=True, model=None):
                     )
                 ]
                 res_negated = pool.map(run_thread_negated, arguments)
-
+        gc.collect()
         for idx, result in enumerate(res):
 
             result_masked_topk, sample_MRR, sample_P, sample_perplexity, msg = result
@@ -641,7 +642,7 @@ def main(args, shuffle_data=True, model=None):
                     Precision_positivie += sample_P
 
             list_of_results.append(element)
-
+        gc.collect()
     pool.close()
     pool.join()
 
@@ -694,7 +695,7 @@ def main(args, shuffle_data=True, model=None):
     # )
     # with open("{}/result.pkl".format(log_directory), "wb") as f:
     #     pickle.dump(all_results, f)
-
+    gc.collect()
     return Precision1
 
 

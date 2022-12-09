@@ -15,6 +15,8 @@ import os
 from os.path import isfile, join
 from shutil import copyfile
 from collections import defaultdict
+import time
+import gc
 
 LMs = [
     {
@@ -120,6 +122,8 @@ def run_experiments(
             data = load_file(PARAMETERS["dataset_filename"])
             type_count[relation["type"]].append(len(data))
 
+        gc.collect()
+
     mean_p1 = statistics.mean(all_Precision1)
     print("@@@ {} - mean P@1: {}".format(input_param["label"], mean_p1))
     results_file.close()
@@ -135,6 +139,7 @@ def run_experiments(
             len(type_count[t]),
             flush=True,
         )
+    gc.collect()
 
     return mean_p1, all_Precision1
 
@@ -187,6 +192,7 @@ def run_all_LMs(parameters):
     for ip in LMs:
         print(ip["label"])
         run_experiments(*parameters, input_param=ip, use_negated_probes=False)
+        gc.collect()
 
 
 if __name__ == "__main__":
