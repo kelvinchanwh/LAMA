@@ -44,8 +44,9 @@ LMs = [
 ]
 
 def splitConceptNet(data_path_pre="data/ConceptNet/"):
-    lines_per_file = 3000
+    lines_per_file = 7500
     smallfile = None
+    numFiles = 1
     with open(data_path_pre + 'test.jsonl') as bigfile:
         lines = bigfile.readlines()
         random.Random(1).shuffle(lines)
@@ -53,11 +54,14 @@ def splitConceptNet(data_path_pre="data/ConceptNet/"):
             if lineno % lines_per_file == 0:
                 if smallfile:
                     smallfile.close()
+                    numFiles += 1
                 small_filename = data_path_pre + 'test_%d.jsonl'%(lineno/lines_per_file)
                 smallfile = open(small_filename, "w")
             smallfile.write(line)
         if smallfile:
             smallfile.close()
+            numFiles += 1
+    return numFiles
 
 def run_experiments(
     relations,
@@ -191,7 +195,9 @@ def get_GoogleRE_parameters():
 
 
 def get_ConceptNet_parameters(data_path_pre="data/"):
-    relations = [{"relation": "test_%d"%i} for i in range(10)]
+    print("Splitting ConceptNet to save RAM")
+    num_files = splitConceptNet()
+    relations = [{"relation": "test_%d"%i} for i in range(num_files)]
     data_path_pre += "ConceptNet/"
     data_path_post = ".jsonl"
     return relations, data_path_pre, data_path_post
@@ -222,8 +228,6 @@ if __name__ == "__main__":
     run_all_LMs(parameters)
 
     print("3. ConceptNet")
-    print("Splitting ConceptNet to save RAM")
-    splitConceptNet()
     parameters = get_ConceptNet_parameters()
     run_all_LMs(parameters)
 
