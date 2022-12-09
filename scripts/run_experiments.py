@@ -17,6 +17,7 @@ from shutil import copyfile
 from collections import defaultdict
 import time
 import gc
+import random
 
 LMs = [
     {
@@ -42,6 +43,21 @@ LMs = [
     },
 ]
 
+def splitConceptNet(data_path_pre="data/ConceptNet/"):
+    lines_per_file = 3000
+    smallfile = None
+    with open(data_path_pre + 'test.jsonl') as bigfile:
+        lines = bigfile.readlines()
+        random.Random(1).shuffle(lines)
+        for lineno, line in enumerate(lines):
+            if lineno % lines_per_file == 0:
+                if smallfile:
+                    smallfile.close()
+                small_filename = data_path_pre + 'test_%d.jsonl'%(lineno/lines_per_file)
+                smallfile = open(small_filename, "w")
+            smallfile.write(line)
+        if smallfile:
+            smallfile.close()
 
 def run_experiments(
     relations,
@@ -175,7 +191,7 @@ def get_GoogleRE_parameters():
 
 
 def get_ConceptNet_parameters(data_path_pre="data/"):
-    relations = [{"relation": "test"}]
+    relations = [{"relation": "test_%d"%i} for i in range(10)]
     data_path_pre += "ConceptNet/"
     data_path_post = ".jsonl"
     return relations, data_path_pre, data_path_post
@@ -197,19 +213,21 @@ def run_all_LMs(parameters):
 
 if __name__ == "__main__":
 
-    print("1. Google-RE")
-    parameters = get_GoogleRE_parameters()
-    run_all_LMs(parameters)
+    # print("1. Google-RE")
+    # parameters = get_GoogleRE_parameters()
+    # run_all_LMs(parameters)
 
-    print("2. T-REx")
-    parameters = get_TREx_parameters()
-    run_all_LMs(parameters)
+    # print("2. T-REx")
+    # parameters = get_TREx_parameters()
+    # run_all_LMs(parameters)
 
     print("3. ConceptNet")
+    print("Splitting ConceptNet to save RAM")
+    splitConceptNet()
     parameters = get_ConceptNet_parameters()
     run_all_LMs(parameters)
 
-    print("4. SQuAD")
-    parameters = get_Squad_parameters()
-    run_all_LMs(parameters)
+    # print("4. SQuAD")
+    # parameters = get_Squad_parameters()
+    # run_all_LMs(parameters)
 
