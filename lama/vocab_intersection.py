@@ -12,52 +12,67 @@ import lama.modules.base_connector as base
 
 
 CASED_MODELS = [
+  # {
+  #   # "BERT BASE CASED"
+  #   "lm": "bert",
+  #   "bert_model_name": "bert-base-cased",
+  #   "bert_model_dir": "pre-trained_language_models/bert/cased_L-12_H-768_A-12/",
+  #   "bert_vocab_name": "vocab.txt"
+  # },
+  # {
+  #   # "BERT LARGE CASED"
+  #   "lm" : "bert",
+  #   "bert_model_name": "bert-large-cased",
+  #   "bert_model_dir": "pre-trained_language_models/bert/cased_L-24_H-1024_A-16/",
+  #   "bert_vocab_name": "vocab.txt"
+  # },
+  # {
+  #   # "BERT BASE MULTILINGUAL CASED"
+  #   "lm" : "bert",
+  #   "bert_model_name": "bert-base-multilingual-cased",
+  #   "bert_model_dir": "pre-trained_language_models/bert/multi_cased_L-12_H-768_A-12/",
+  #   "bert_vocab_name": "vocab.txt"
+  # },
   {
-    # "BERT BASE CASED"
-    "lm": "bert",
-    "bert_model_name": "bert-base-cased",
-    "bert_model_dir": "pre-trained_language_models/bert/cased_L-12_H-768_A-12/",
-    "bert_vocab_name": "vocab.txt"
+    # twhin-bert-base
+    "lm" : "bert",
+    "bert_model_name": "Twitter/twhin-bert-base"
   },
   {
-    # "BERT LARGE CASED"
+    # bertweet-base
     "lm" : "bert",
-    "bert_model_name": "bert-large-cased",
-    "bert_model_dir": "pre-trained_language_models/bert/cased_L-24_H-1024_A-16/",
-    "bert_vocab_name": "vocab.txt"
-  },
-  {
-    # "BERT BASE MULTILINGUAL CASED"
-    "lm" : "bert",
-    "bert_model_name": "bert-base-multilingual-cased",
-    "bert_model_dir": "pre-trained_language_models/bert/multi_cased_L-12_H-768_A-12/",
-    "bert_vocab_name": "vocab.txt"
+    "bert_model_name": "vinai/bertweet-base"
   }
 ]
 
 CASED_COMMON_VOCAB_FILENAME = "pre-trained_language_models/common_vocab_cased.txt"
 
 LOWERCASED_MODELS = [
+#  {
+#    # "BERT BASE UNCASED"
+#    "lm": "bert",
+#    "bert_model_name": "bert-base-uncased",
+#    "bert_model_dir": "pre-trained_language_models/bert/uncased_L-12_H-768_A-12/",
+#    "bert_vocab_name": "vocab.txt"
+#  },
+#  {
+#    # "BERT LARGE UNCASED"
+#    "lm": "bert",
+#    "bert_model_name": "bert-large-uncased",
+#    "bert_model_dir": "pre-trained_language_models/bert/uncased_L-24_H-1024_A-16/",
+#    "bert_vocab_name": "vocab.txt"
+#  },  
+#  {
+#     # "BERT BASE MULTILINGUAL UNCASED"
+#     "lm" : "bert",
+#     "bert_model_name": "bert-base-multilingual-uncased",
+#     "bert_model_dir": "pre-trained_language_models/bert/multilingual_L-12_H-768_A-12/",
+#     "bert_vocab_name": "vocab.txt"
+#   }, 
  {
-   # "BERT BASE UNCASED"
-   "lm": "bert",
-   "bert_model_name": "bert-base-uncased",
-   "bert_model_dir": "pre-trained_language_models/bert/uncased_L-12_H-768_A-12/",
-   "bert_vocab_name": "vocab.txt"
- },
- {
-   # "BERT LARGE UNCASED"
-   "lm": "bert",
-   "bert_model_name": "bert-large-uncased",
-   "bert_model_dir": "pre-trained_language_models/bert/uncased_L-24_H-1024_A-16/",
-   "bert_vocab_name": "vocab.txt"
- },  
- {
-    # "BERT BASE MULTILINGUAL UNCASED"
+    # "BERT BASE LEGAL UNCASED"
     "lm" : "bert",
-    "bert_model_name": "bert-base-multilingual-uncased",
-    "bert_model_dir": "pre-trained_language_models/bert/multilingual_L-12_H-768_A-12/",
-    "bert_vocab_name": "vocab.txt"
+    "bert_model_name": "nlpaueb/legal-bert-base-uncased"
   }
 ]
 
