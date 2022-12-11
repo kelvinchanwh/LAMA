@@ -22,24 +22,21 @@ import random
 LMs = [
     {
         "lm": "bert",
-        "label": "bert_base",
+        "label": "Twitter/twhin-bert-base",
         "models_names": ["bert"],
-        "bert_model_name": "bert-base-cased",
-        "bert_model_dir": "pre-trained_language_models/bert/cased_L-12_H-768_A-12",
+        "bert_model_name": "Twitter/twhin-bert-base",
     },
     {
         "lm": "bert",
         "label": "bert_large",
         "models_names": ["bert"],
-        "bert_model_name": "bert-large-cased",
-        "bert_model_dir": "pre-trained_language_models/bert/cased_L-24_H-1024_A-16",
+        "bert_model_name": "vinai/bertweet-base",
     },
     {
         "lm": "bert",
         "label": "bert_base_multilingual_cased",
         "models_names": ["bert"],
-        "bert_model_name": "bert-base-multilingual-cased",
-        "bert_model_dir": "pre-trained_language_models/bert/multi_cased_L-12_H-768_A-12",
+        "bert_model_name": "nlpaueb/legal-bert-base-uncased",
     },
 ]
 
