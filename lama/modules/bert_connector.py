@@ -10,6 +10,7 @@ from pytorch_pretrained_bert import BertTokenizer, BertForMaskedLM, BasicTokeniz
 import numpy as np
 from lama.modules.base_connector import *
 import torch.nn.functional as F
+from transformers import AutoModel, AutoTokenizer, AutoModelForMaskedLM
 
 
 class CustomBaseTokenizer(BasicTokenizer):
@@ -54,15 +55,15 @@ class Bert(Base_Connector):
         bert_model_name = args.bert_model_name
         dict_file = bert_model_name
 
-        if args.bert_model_dir is not None:
-            # load bert model from file
-            bert_model_name = str(args.bert_model_dir) + "/"
-            dict_file = bert_model_name+args.bert_vocab_name
-            self.dict_file = dict_file
-            print("loading BERT model from {}".format(bert_model_name))
-        else:
-            # load bert model from huggingface cache
-            pass
+        # if args.bert_model_dir is not None:
+        #     # load bert model from file
+        #     bert_model_name = str(args.bert_model_dir) + "/"
+        #     dict_file = bert_model_name+args.bert_vocab_name
+        #     self.dict_file = dict_file
+        #     print("loading BERT model from {}".format(bert_model_name))
+        # else:
+        #     # load bert model from huggingface cache
+        #     pass
 
         # When using a cased model, make sure to pass do_lower_case=False directly to BaseTokenizer
         do_lower_case = False
@@ -70,11 +71,11 @@ class Bert(Base_Connector):
             do_lower_case=True
 
         # Load pre-trained model tokenizer (vocabulary)
-        self.tokenizer = BertTokenizer.from_pretrained(dict_file)
+        self.tokenizer = AutoTokenizer.from_pretrained(dict_file)
 
         # original vocab
         self.map_indices = None
-        self.vocab = list(self.tokenizer.ids_to_tokens.values())
+        self.vocab = list(self.tokenizer.get_vocab())
         self._init_inverse_vocab()
 
         # Add custom tokenizer to avoid splitting the ['MASK'] token
@@ -83,7 +84,7 @@ class Bert(Base_Connector):
 
         # Load pre-trained model (weights)
         # ... to get prediction/generation
-        self.masked_bert_model = BertForMaskedLM.from_pretrained(bert_model_name)
+        self.masked_bert_model = AutoModelForMaskedLM.from_pretrained(bert_model_name)
 
         self.masked_bert_model.eval()
 

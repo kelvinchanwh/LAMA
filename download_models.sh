@@ -60,6 +60,14 @@ cd "$DST_DIR"
 #   cd ../../
 # fi
 
+echo "BERTweet"
+if [[ ! -f roberta/BERTweet_base_fairseq/model.pt ]]; then
+  mkdir -p 'roberta'
+  cd roberta
+  wget https://public.vinai.io/BERTweet_base_fairseq.tar.gz
+  tar -xzvf BERTweet_base_fairseq.tar.gz
+fi
+
 # echo 'cased models'
 
 # echo "BERT BASE CASED"

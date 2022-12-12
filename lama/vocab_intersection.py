@@ -40,9 +40,13 @@ CASED_MODELS = [
   },
   {
     # bertweet-base
-    "lm" : "bert",
-    "bert_model_name": "vinai/bertweet-base"
-  }
+    "lm": "roberta",
+    "label": "bert_large",
+    "models_names": ["roberta"],
+    "roberta_model_name": "model.pt",
+    "roberta_vocab_name": "vocab.txt",
+    "roberta_model_dir": "pre-trained_language_models/roberta/BERTweet_base_fairseq/"
+},
 ]
 
 CASED_COMMON_VOCAB_FILENAME = "pre-trained_language_models/common_vocab_cased.txt"
@@ -116,6 +120,8 @@ def __vocab_intersection(models, filename):
         manual_punctuation = ['(', ')', '.', ',']
         new_common_vocab = []
         for i in tqdm(range(len(common_vocab))):
+            if word == "":
+              continue
             word = common_vocab[i]
             doc = nlp(word)
             token = doc[0]

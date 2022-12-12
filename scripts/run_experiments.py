@@ -20,24 +20,26 @@ import gc
 import random
 
 LMs = [
+    # {
+    #     "lm": "bert",
+    #     "label": "Twitter/twhin-bert-base",
+    #     "models_names": ["bert"],
+    #     "bert_model_name": "Twitter/twhin-bert-base"
+    # },
     {
-        "lm": "bert",
-        "label": "Twitter/twhin-bert-base",
-        "models_names": ["bert"],
-        "bert_model_name": "Twitter/twhin-bert-base",
-    },
-    {
-        "lm": "bert",
+        "lm": "roberta",
         "label": "bert_large",
-        "models_names": ["bert"],
-        "bert_model_name": "vinai/bertweet-base",
+        "models_names": ["roberta"],
+        "roberta_model_name": "model.pt",
+        "roberta_vocab_name": "vocab.txt",
+        "roberta_model_dir": "pre-trained_language_models/roberta/BERTweet_base_fairseq/"
     },
-    {
-        "lm": "bert",
-        "label": "bert_base_multilingual_cased",
-        "models_names": ["bert"],
-        "bert_model_name": "nlpaueb/legal-bert-base-uncased",
-    },
+    # {
+    #     "lm": "bert",
+    #     "label": "bert_base_multilingual_cased",
+    #     "models_names": ["bert"],
+    #     "bert_model_name": "nlpaueb/legal-bert-base-uncased",
+    # },
 ]
 
 def splitConceptNet(data_path_pre="data/ConceptNet/"):
