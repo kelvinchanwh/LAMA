@@ -39,6 +39,34 @@ CASED_COMMON_VOCAB_FILENAME = "pre-trained_language_models/common_vocab_cased.tx
 
 LOWERCASED_MODELS = [
  {
+   # "BERT TINY UNCASED"
+   "lm": "bert",
+   "bert_model_name": "bert-tiny-uncased",
+   "bert_model_dir": "pre-trained_language_models/bert/uncased_L-2_H-128_A-2/",
+   "bert_vocab_name": "vocab.txt"
+ },
+ {
+   # "BERT MINI UNCASED"
+   "lm": "bert",
+   "bert_model_name": "bert-mini-uncased",
+   "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-256_A-4/",
+   "bert_vocab_name": "vocab.txt"
+ },
+ {
+   # "BERT SMALL UNCASED"
+   "lm": "bert",
+   "bert_model_name": "bert-small-uncased",
+   "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-512_A-8/",
+   "bert_vocab_name": "vocab.txt"
+ },
+ {
+   # "BERT MEDIUM UNCASED"
+   "lm": "bert",
+   "bert_model_name": "bert-medium-uncased",
+   "bert_model_dir": "pre-trained_language_models/bert/uncased_L-8_H-512_A-8/",
+   "bert_vocab_name": "vocab.txt"
+ },
+ {
    # "BERT BASE UNCASED"
    "lm": "bert",
    "bert_model_name": "bert-base-uncased",

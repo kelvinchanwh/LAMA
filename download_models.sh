@@ -15,6 +15,58 @@ DST_DIR="$ROOD_DIR/pre-trained_language_models"
 mkdir -p "$DST_DIR"
 cd "$DST_DIR"
 
+echo "BERT TINY LOWERCASED"
+if [[ ! -f bert/uncased_L-2_H-128_A-2/bert_config.json ]]; then
+  mkdir -p 'bert'
+  cd bert
+  git clone https://huggingface.co/prajjwal1/bert-tiny uncased_L-2_H-128_A-2
+  cd uncased_L-2_H-128_A-2
+  wget -c "https://storage.googleapis.com/bert_models/2020_02_20/uncased_L-2_H-128_A-2.zip"
+  unzip -o uncased_L-2_H-128_A-2.zip
+  rm uncased_L-2_H-128_A-2.zip
+  rm bert_model*
+  cd ../../
+fi
+
+echo "BERT MINI LOWERCASED"
+if [[ ! -f bert/uncased_L-4_H-256_A-4/bert_config.json ]]; then
+  mkdir -p 'bert'
+  cd bert
+  git clone https://huggingface.co/prajjwal1/bert-mini uncased_L-4_H-256_A-4
+  cd uncased_L-4_H-256_A-4
+  wget -c "https://storage.googleapis.com/bert_models/2020_02_20/uncased_L-4_H-256_A-4.zip"
+  unzip -o uncased_L-4_H-256_A-4.zip
+  rm uncased_L-4_H-256_A-4.zip
+  rm bert_model*
+  cd ../../
+fi
+
+echo "BERT SMALL LOWERCASED"
+if [[ ! -f bert/uncased_L-4_H-512_A-8/bert_config.json ]]; then
+  mkdir -p 'bert'
+  cd bert
+  git clone https://huggingface.co/prajjwal1/bert-small uncased_L-4_H-512_A-8
+  cd uncased_L-4_H-512_A-8
+  wget -c "https://storage.googleapis.com/bert_models/2020_02_20/uncased_L-4_H-512_A-8.zip"
+  unzip -o uncased_L-4_H-512_A-8.zip
+  rm uncased_L-4_H-512_A-8.zip
+  rm bert_model*
+  cd ../../
+fi
+
+echo "BERT MEDIUM LOWERCASED"
+if [[ ! -f bert/uncased_L-8_H-512_A-8/bert_config.json ]]; then
+  mkdir -p 'bert'
+  cd bert
+  git clone https://huggingface.co/prajjwal1/bert-medium uncased_L-8_H-512_A-8
+  cd uncased_L-8_H-512_A-8
+  wget -c "https://storage.googleapis.com/bert_models/2020_02_20/uncased_L-8_H-512_A-8.zip"
+  unzip -o uncased_L-8_H-512_A-8.zip
+  rm uncased_L-8_H-512_A-8.zip
+  rm bert_model*
+  cd ../../
+fi
+
 echo "BERT BASE LOWERCASED"
 if [[ ! -f bert/uncased_L-12_H-768_A-12/bert_config.json ]]; then
   mkdir -p 'bert'

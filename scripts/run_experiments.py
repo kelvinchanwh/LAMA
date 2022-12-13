@@ -41,6 +41,62 @@ LMs = [
         "bert_model_name": "bert-base-multilingual-cased",
         "bert_model_dir": "pre-trained_language_models/bert/multi_cased_L-12_H-768_A-12",
     },
+    {
+        # "BERT TINY UNCASED"
+        "lm": "bert",
+        "bert_model_name": "bert-tiny-uncased",
+        "models_names": ["bert"],
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-2_H-128_A-2/",
+        "bert_vocab_name": "vocab.txt"
+    },
+    {
+        # "BERT MINI UNCASED"
+        "lm": "bert",
+        "bert_model_name": "bert-mini-uncased",
+        "models_names": ["bert"],
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-256_A-4/",
+        "bert_vocab_name": "vocab.txt"
+    },
+    {
+        # "BERT SMALL UNCASED"
+        "lm": "bert",
+        "bert_model_name": "bert-small-uncased",
+        "models_names": ["bert"],
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-512_A-8/",
+        "bert_vocab_name": "vocab.txt"
+    },
+    {
+        # "BERT MEDIUM UNCASED"
+        "lm": "bert",
+        "bert_model_name": "bert-medium-uncased",
+        "models_names": ["bert"],
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-8_H-512_A-8/",
+        "bert_vocab_name": "vocab.txt"
+    },
+    {
+        # "BERT BASE UNCASED"
+        "lm": "bert",
+        "bert_model_name": "bert-base-uncased",
+        "models_names": ["bert"],
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-12_H-768_A-12/",
+        "bert_vocab_name": "vocab.txt"
+    },
+    {
+        # "BERT LARGE UNCASED"
+        "lm": "bert",
+        "bert_model_name": "bert-large-uncased",
+        "models_names": ["bert"],
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-24_H-1024_A-16/",
+        "bert_vocab_name": "vocab.txt"
+    },  
+    {
+        # "BERT BASE MULTILINGUAL UNCASED"
+        "lm" : "bert",
+        "bert_model_name": "bert-base-multilingual-uncased",
+        "models_names": ["bert"],
+        "bert_model_dir": "pre-trained_language_models/bert/multilingual_L-12_H-768_A-12/",
+        "bert_vocab_name": "vocab.txt"
+    }
 ]
 
 def splitConceptNet(data_path_pre="data/ConceptNet/"):
