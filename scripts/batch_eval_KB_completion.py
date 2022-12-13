@@ -32,8 +32,10 @@ def load_file(filename):
             data.append(json.loads(line))
     if "TREx" in filename:
         for sample in data:
+            masked_sentences = []
             for evidence in sample["evidences"]:
-                evidence["masked_sentences"] = [evidence["masked_sentence"]]
+                masked_sentences.append(evidence["masked_sentence"])
+            sample["masked_sentences"] = masked_sentences
     return data
 
 
