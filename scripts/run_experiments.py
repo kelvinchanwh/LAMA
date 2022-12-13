@@ -26,6 +26,7 @@ LMs = [
         "models_names": ["bert"],
         "bert_model_name": "bert-base-cased",
         "bert_model_dir": "pre-trained_language_models/bert/cased_L-12_H-768_A-12",
+        "lowercase": False,
     },
     {
         "lm": "bert",
@@ -33,6 +34,7 @@ LMs = [
         "models_names": ["bert"],
         "bert_model_name": "bert-large-cased",
         "bert_model_dir": "pre-trained_language_models/bert/cased_L-24_H-1024_A-16",
+        "lowercase": False,
     },
     {
         "lm": "bert",
@@ -40,62 +42,70 @@ LMs = [
         "models_names": ["bert"],
         "bert_model_name": "bert-base-multilingual-cased",
         "bert_model_dir": "pre-trained_language_models/bert/multi_cased_L-12_H-768_A-12",
+        "lowercase": False,
     },
     {
         # "BERT TINY UNCASED"
         "lm": "bert",
-        "bert_model_name": "bert-tiny-uncased",
+        "label": "bert-tiny-uncased",
         "models_names": ["bert"],
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-2_H-128_A-2/",
-        "bert_vocab_name": "vocab.txt"
+        "bert_model_name": "bert-tiny-uncased",
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-2_H-128_A-2/"
+        "lowercase": True,
     },
     {
         # "BERT MINI UNCASED"
         "lm": "bert",
-        "bert_model_name": "bert-mini-uncased",
+        "label": "bert-mini-uncased",
         "models_names": ["bert"],
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-256_A-4/",
-        "bert_vocab_name": "vocab.txt"
+        "bert_model_name": "bert-mini-uncased",
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-256_A-4/"
+        "lowercase": True,
     },
     {
         # "BERT SMALL UNCASED"
         "lm": "bert",
-        "bert_model_name": "bert-small-uncased",
+        "label": "bert-small-uncased",
         "models_names": ["bert"],
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-512_A-8/",
-        "bert_vocab_name": "vocab.txt"
+        "bert_model_name": "bert-small-uncased",
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-512_A-8/"
+        "lowercase": True,
     },
     {
         # "BERT MEDIUM UNCASED"
         "lm": "bert",
-        "bert_model_name": "bert-medium-uncased",
+        "label": "bert-medium-uncased",
         "models_names": ["bert"],
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-8_H-512_A-8/",
-        "bert_vocab_name": "vocab.txt"
+        "bert_model_name": "bert-medium-uncased",
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-8_H-512_A-8/"
+        "lowercase": True,
     },
     {
         # "BERT BASE UNCASED"
         "lm": "bert",
-        "bert_model_name": "bert-base-uncased",
+        "label": "bert-base-uncased",
         "models_names": ["bert"],
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-12_H-768_A-12/",
-        "bert_vocab_name": "vocab.txt"
+        "bert_model_name": "bert-base-uncased",
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-12_H-768_A-12/"
+        "lowercase": True,
     },
     {
         # "BERT LARGE UNCASED"
         "lm": "bert",
-        "bert_model_name": "bert-large-uncased",
+        "label": "bert-large-uncased",
         "models_names": ["bert"],
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-24_H-1024_A-16/",
-        "bert_vocab_name": "vocab.txt"
+        "bert_model_name": "bert-large-uncased",
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-24_H-1024_A-16/"
+        "lowercase": True,
     },  
     {
         # "BERT BASE MULTILINGUAL UNCASED"
         "lm" : "bert",
-        "bert_model_name": "bert-base-multilingual-uncased",
+        "label": "bert-base-multilingual-uncased",
         "models_names": ["bert"],
-        "bert_model_dir": "pre-trained_language_models/bert/multilingual_L-12_H-768_A-12/",
-        "bert_vocab_name": "vocab.txt"
+        "bert_model_name": "bert-base-multilingual-uncased",
+        "bert_model_dir": "pre-trained_language_models/bert/multilingual_L-12_H-768_A-12/"
+        "lowercase": True,
     }
 ]
 
@@ -147,7 +157,7 @@ def run_experiments(
             "dataset_filename": "{}{}{}".format(
                 data_path_pre, relation["relation"], data_path_post
             ),
-            "common_vocab_filename": "pre-trained_language_models/common_vocab_cased.txt",
+            "common_vocab_filename": "pre-trained_language_models/common_vocab_%s.txt"%("lowercased" if input_param["lowercase"] else "cased"),
             "template": "",
             "bert_vocab_name": "vocab.txt",
             "batch_size": 32,
@@ -155,7 +165,7 @@ def run_experiments(
             "full_logdir": "output/results/{}/{}".format(
                 input_param["label"], relation["relation"]
             ),
-            "lowercase": False,
+            "lowercase": input_param["lowercase"],
             "max_sentence_length": 100,
             "threads": -1,
             "interactive": False,
