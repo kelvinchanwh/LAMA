@@ -185,11 +185,6 @@ def run_experiments(
         # see if file exists
         try:
             data = load_file(args.dataset_filename)
-            if "TREx" in args.dataset_filename:
-                for sample in data:
-                    for evidence in sample["evidences"]:
-                        evidence["masked_sentences"] = [evidence["masked_sentence"]]
-                # [evidence["masked_sentences"] = [evidence["masked_sentence"]] for evidence in sample["evidences"] for sample in data]
         except Exception as e:
             print("Relation {} excluded.".format(relation["relation"]))
             print("Exception: {}".format(e))
@@ -290,9 +285,9 @@ def run_all_LMs(parameters):
 
 if __name__ == "__main__":
 
-    print("1. Google-RE")
-    parameters = get_GoogleRE_parameters()
-    run_all_LMs(parameters)
+    # print("1. Google-RE")
+    # parameters = get_GoogleRE_parameters()
+    # run_all_LMs(parameters)
 
     print("2. T-REx")
     parameters = get_TREx_parameters()
