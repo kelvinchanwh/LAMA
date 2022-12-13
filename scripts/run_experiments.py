@@ -50,7 +50,7 @@ LMs = [
         "label": "bert-tiny-uncased",
         "models_names": ["bert"],
         "bert_model_name": "bert-tiny-uncased",
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-2_H-128_A-2/"
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-2_H-128_A-2/",
         "lowercase": True,
     },
     {
@@ -59,7 +59,7 @@ LMs = [
         "label": "bert-mini-uncased",
         "models_names": ["bert"],
         "bert_model_name": "bert-mini-uncased",
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-256_A-4/"
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-256_A-4/",
         "lowercase": True,
     },
     {
@@ -68,7 +68,7 @@ LMs = [
         "label": "bert-small-uncased",
         "models_names": ["bert"],
         "bert_model_name": "bert-small-uncased",
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-512_A-8/"
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-4_H-512_A-8/",
         "lowercase": True,
     },
     {
@@ -77,7 +77,7 @@ LMs = [
         "label": "bert-medium-uncased",
         "models_names": ["bert"],
         "bert_model_name": "bert-medium-uncased",
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-8_H-512_A-8/"
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-8_H-512_A-8/",
         "lowercase": True,
     },
     {
@@ -86,7 +86,7 @@ LMs = [
         "label": "bert-base-uncased",
         "models_names": ["bert"],
         "bert_model_name": "bert-base-uncased",
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-12_H-768_A-12/"
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-12_H-768_A-12/",
         "lowercase": True,
     },
     {
@@ -95,7 +95,7 @@ LMs = [
         "label": "bert-large-uncased",
         "models_names": ["bert"],
         "bert_model_name": "bert-large-uncased",
-        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-24_H-1024_A-16/"
+        "bert_model_dir": "pre-trained_language_models/bert/uncased_L-24_H-1024_A-16/",
         "lowercase": True,
     },  
     {
@@ -104,7 +104,7 @@ LMs = [
         "label": "bert-base-multilingual-uncased",
         "models_names": ["bert"],
         "bert_model_name": "bert-base-multilingual-uncased",
-        "bert_model_dir": "pre-trained_language_models/bert/multilingual_L-12_H-768_A-12/"
+        "bert_model_dir": "pre-trained_language_models/bert/multilingual_L-12_H-768_A-12/",
         "lowercase": True,
     }
 ]
@@ -185,6 +185,11 @@ def run_experiments(
         # see if file exists
         try:
             data = load_file(args.dataset_filename)
+            if "TREx" in args.dataset_filename:
+                for sample in data:
+                    for evidence in sample["evidences"]:
+                        evidence["masked_sentences"] = [evidence["masked_sentence"]]
+                # [evidence["masked_sentences"] = [evidence["masked_sentence"]] for evidence in sample["evidences"] for sample in data]
         except Exception as e:
             print("Relation {} excluded.".format(relation["relation"]))
             print("Exception: {}".format(e))
