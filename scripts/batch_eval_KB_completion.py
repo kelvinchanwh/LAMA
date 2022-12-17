@@ -207,8 +207,17 @@ def run_thread_negated(arguments):
 def lowercase_samples(samples, use_negated_probes=False):
     new_samples = []
     for sample in samples:
-        sample["obj_label"] = sample["obj_label"].lower()
-        sample["sub_label"] = sample["sub_label"].lower()
+        try:
+            sample["obj_label"] = sample["obj_label"].lower()
+        except KeyError:
+            print ("WARNING: obj_label does not exist")
+        try:
+            sample["sub_label"] = sample["sub_label"].lower()
+        except KeyError:
+            try:
+                sample["sub_label"] = sample["sub"].lower()
+            except KeyError:
+                print ("WARNING: sub_label does not exist")
         lower_masked_sentences = []
         for sentence in sample["masked_sentences"]:
             sentence = sentence.lower()
