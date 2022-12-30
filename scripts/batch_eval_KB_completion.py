@@ -484,6 +484,7 @@ def main(args, shuffle_data=True, model=None):
         sentences_b = sentences_batches[i]
         if model_type_name == "t5":
             for sample, sentence in zip(samples_b, sentences_b):
+                sentence = sentence[0].replace("[MASK]", "<extra_id_0>")
                 input_ids = model.get_id(sentence)
                 outputs = model.generate_output(input_ids)
                 res = (list(map(model._filter, outputs)))
