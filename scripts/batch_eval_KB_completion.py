@@ -492,11 +492,12 @@ def main(args, shuffle_data=True, model=None):
                 sample_MRR = 0
                 sample_Precision = 0
                 sample_Precision1 = 0
-                if sample in res:
+                obj = sample['obj_label']
+                if obj in res:
                     sample_Precision = 1
-                    if sample == res[0]:
+                    if obj == res[0]:
                         sample_Precision1 = 1
-                    sample_MRR = 1/(res.index(sample) + 1)
+                    sample_MRR = 1/(res.index(obj) + 1)
                 
                 Precision += sample_Precision
                 Precision1 += sample_Precision1
