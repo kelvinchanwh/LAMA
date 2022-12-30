@@ -53,6 +53,6 @@ class T5(Base_Connector):
         # Generaing 20 sequences with maximum length set to 5
         outputs = self.mlm.generate(input_ids=input_ids, 
                                 num_beams=200, num_return_sequences=10,
-                                max_length=5)
+                                max_length=3)
         return outputs
 
