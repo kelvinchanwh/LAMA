@@ -21,6 +21,13 @@ import random
 
 LMs = [
     {
+        "lm": "t5",
+        "label": "t5_base",
+        "models_names": ["t5"],
+        "t5_model_name": "t5-base",
+        "lowercase": False,
+    },
+    {
         "lm": "bert",
         "label": "bert_base",
         "models_names": ["bert"],

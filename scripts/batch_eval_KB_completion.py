@@ -334,6 +334,8 @@ def main(args, shuffle_data=True, model=None):
         model_name = "BERT_{}".format(args.bert_model_name)
     elif model_type_name == "elmo":
         model_name = "ELMo_{}".format(args.elmo_model_name)
+    elif model_type_name == "t5":
+        model_name = "T5_{}".format(args.t5_model_name)
     else:
         model_name = model_type_name.title()
 
@@ -349,7 +351,7 @@ def main(args, shuffle_data=True, model=None):
     vocab_subset = None
     index_list = None
     msg += "args: {}\n".format(args)
-    if args.common_vocab_filename is not None:
+    if args.common_vocab_filename is not None and model_type_name != "t5":
         vocab_subset = load_vocab(args.common_vocab_filename)
         msg += "common vocabulary size: {}\n".format(len(vocab_subset))
 
@@ -402,9 +404,12 @@ def main(args, shuffle_data=True, model=None):
         # keep samples as they are
         all_samples = data
 
-    all_samples, ret_msg = filter_samples(
-        model, data, vocab_subset, args.max_sentence_length, args.template
-    )
+    if model_type_name != "t5":
+        all_samples, ret_msg = filter_samples(
+            model, data, vocab_subset, args.max_sentence_length, args.template
+        )
+    else:
+        ret_msg = ""
 
     # OUT_FILENAME = "{}.jsonl".format(args.dataset_filename)
     # with open(OUT_FILENAME, 'w') as outfile:
@@ -477,189 +482,210 @@ def main(args, shuffle_data=True, model=None):
 
         samples_b = samples_batches[i]
         sentences_b = sentences_batches[i]
+        if model_type_name == "t5":
+            for sample, sentence in zip(samples_b, sentences_b):
+                input_ids = model.get_id(sentence)
+                outputs = model.generate_output(input_ids)
+                res = (list(map(model._filter, outputs)))
 
-        (
-            original_log_probs_list,
-            token_ids_list,
-            masked_indices_list,
-        ) = model.get_batch_generation(sentences_b, logger=logger)
+                sample_MRR = 0
+                sample_Precision = 0
+                sample_Precision1 = 0
+                if sample in res:
+                    sample_Precision = 1
+                    if sample == res[0]:
+                        sample_Precision1 = 1
+                    sample_MRR = 1/(res.index(sample) + 1)
+                
+                Precision += sample_Precision
+                Precision1 += sample_Precision1
+                MRR += sample_MRR
 
-        if vocab_subset is not None:
-            # filter log_probs
-            filtered_log_probs_list = model.filter_logprobs(
-                original_log_probs_list, filter_logprob_indices
-            )
+                list_of_results.append([sample, sentence, res, Precision, Precision1, MRR])
+
         else:
-            filtered_log_probs_list = original_log_probs_list
-
-        label_index_list = []
-        for sample in samples_b:
-            obj_label_id = model.get_id(sample["obj_label"])
-
-            # MAKE SURE THAT obj_label IS IN VOCABULARIES
-            if obj_label_id is None:
-                raise ValueError(
-                    "object label {} not in model vocabulary".format(
-                        sample["obj_label"]
-                    )
-                )
-            elif model.vocab[obj_label_id[0]] != sample["obj_label"]:
-                raise ValueError(
-                    "object label {} not in model vocabulary".format(
-                        sample["obj_label"]
-                    )
-                )
-            elif vocab_subset is not None and sample["obj_label"] not in vocab_subset:
-                raise ValueError(
-                    "object label {} not in vocab subset".format(sample["obj_label"])
-                )
-
-            label_index_list.append(obj_label_id)
-
-        arguments = [
-            {
-                "original_log_probs": original_log_probs,
-                "filtered_log_probs": filtered_log_probs,
-                "token_ids": token_ids,
-                "vocab": model.vocab,
-                "label_index": label_index[0],
-                "masked_indices": masked_indices,
-                "interactive": args.interactive,
-                "index_list": index_list,
-                "sample": sample,
-            }
-            for original_log_probs, filtered_log_probs, token_ids, masked_indices, label_index, sample in zip(
+            (
                 original_log_probs_list,
-                filtered_log_probs_list,
                 token_ids_list,
                 masked_indices_list,
-                label_index_list,
-                samples_b,
-            )
-        ]
-        # single thread for debug
-        # for isx,a in enumerate(arguments):
-        #     print(samples_b[isx])
-        #     run_thread(a)
+            ) = model.get_batch_generation(sentences_b, logger=logger)
 
-        # multithread
-        res = pool.map(run_thread, arguments)
-
-        if args.use_negated_probes:
-            sentences_b_negated = sentences_batches_negated[i]
-
-            # if no negated sentences in batch
-            if all(s[0] == "" for s in sentences_b_negated):
-                res_negated = [(float("nan"), float("nan"), "")] * args.batch_size
-            # eval negated batch
+            if vocab_subset is not None:
+                # filter log_probs
+                filtered_log_probs_list = model.filter_logprobs(
+                    original_log_probs_list, filter_logprob_indices
+                )
             else:
-                (
-                    original_log_probs_list_negated,
-                    token_ids_list_negated,
-                    masked_indices_list_negated,
-                ) = model.get_batch_generation(sentences_b_negated, logger=logger)
-                if vocab_subset is not None:
-                    # filter log_probs
-                    filtered_log_probs_list_negated = model.filter_logprobs(
-                        original_log_probs_list_negated, filter_logprob_indices
+                filtered_log_probs_list = original_log_probs_list
+
+            label_index_list = []
+            for sample in samples_b:
+                obj_label_id = model.get_id(sample["obj_label"])
+
+                # MAKE SURE THAT obj_label IS IN VOCABULARIES
+                if obj_label_id is None:
+                    raise ValueError(
+                        "object label {} not in model vocabulary".format(
+                            sample["obj_label"]
+                        )
                     )
-                else:
-                    filtered_log_probs_list_negated = original_log_probs_list_negated
-
-                arguments = [
-                    {
-                        "log_probs": filtered_log_probs,
-                        "log_probs_negated": filtered_log_probs_negated,
-                        "token_ids": token_ids,
-                        "vocab": model.vocab,
-                        "label_index": label_index[0],
-                        "masked_indices": masked_indices,
-                        "masked_indices_negated": masked_indices_negated,
-                        "index_list": index_list,
-                    }
-                    for filtered_log_probs, filtered_log_probs_negated, token_ids, masked_indices, masked_indices_negated, label_index in zip(
-                        filtered_log_probs_list,
-                        filtered_log_probs_list_negated,
-                        token_ids_list,
-                        masked_indices_list,
-                        masked_indices_list_negated,
-                        label_index_list,
+                elif model.vocab[obj_label_id[0]] != sample["obj_label"]:
+                    raise ValueError(
+                        "object label {} not in model vocabulary".format(
+                            sample["obj_label"]
+                        )
                     )
-                ]
-                res_negated = pool.map(run_thread_negated, arguments)
-        gc.collect()
-        for idx, result in enumerate(res):
+                elif vocab_subset is not None and sample["obj_label"] not in vocab_subset:
+                    raise ValueError(
+                        "object label {} not in vocab subset".format(sample["obj_label"])
+                    )
 
-            result_masked_topk, sample_MRR, sample_P, sample_perplexity, msg = result
+                label_index_list.append(obj_label_id)
 
-            logger.info("\n" + msg + "\n")
+            arguments = [
+                {
+                    "original_log_probs": original_log_probs,
+                    "filtered_log_probs": filtered_log_probs,
+                    "token_ids": token_ids,
+                    "vocab": model.vocab,
+                    "label_index": label_index[0],
+                    "masked_indices": masked_indices,
+                    "interactive": args.interactive,
+                    "index_list": index_list,
+                    "sample": sample,
+                }
+                for original_log_probs, filtered_log_probs, token_ids, masked_indices, label_index, sample in zip(
+                    original_log_probs_list,
+                    filtered_log_probs_list,
+                    token_ids_list,
+                    masked_indices_list,
+                    label_index_list,
+                    samples_b,
+                )
+            ]
+            # single thread for debug
+            # for isx,a in enumerate(arguments):
+            #     print(samples_b[isx])
+            #     run_thread(a)
 
-            sample = samples_b[idx]
-
-            element = {}
-            element["sample"] = sample
-            element["uuid"] = sample["uuid"]
-            element["token_ids"] = token_ids_list[idx]
-            element["masked_indices"] = masked_indices_list[idx]
-            element["label_index"] = label_index_list[idx]
-            element["masked_topk"] = result_masked_topk
-            element["sample_MRR"] = sample_MRR
-            element["sample_Precision"] = sample_P
-            element["sample_perplexity"] = sample_perplexity
-            element["sample_Precision1"] = result_masked_topk["P_AT_1"]
-
-            # print()
-            # print("idx: {}".format(idx))
-            # print("masked_entity: {}".format(result_masked_topk['masked_entity']))
-            # for yi in range(10):
-            #     print("\t{} {}".format(yi,result_masked_topk['topk'][yi]))
-            # print("masked_indices_list: {}".format(masked_indices_list[idx]))
-            # print("sample_MRR: {}".format(sample_MRR))
-            # print("sample_P: {}".format(sample_P))
-            # print("sample: {}".format(sample))
-            # print()
+            # multithread
+            res = pool.map(run_thread, arguments)
 
             if args.use_negated_probes:
-                overlap, spearman, msg = res_negated[idx]
-                # sum overlap and spearmanr if not nan
-                if spearman == spearman:
-                    element["spearmanr"] = spearman
-                    element["overlap"] = overlap
-                    Overlap += overlap
-                    Spearman += spearman
-                    num_valid_negation += 1.0
+                sentences_b_negated = sentences_batches_negated[i]
 
-            MRR += sample_MRR
-            Precision += sample_P
-            Precision1 += element["sample_Precision1"]
-
-            # the judgment of the annotators recording whether they are
-            # evidence in the sentence that indicates a relation between two entities.
-            num_yes = 0
-            num_no = 0
-
-            if "judgments" in sample:
-                # only for Google-RE
-                for x in sample["judgments"]:
-                    if x["judgment"] == "yes":
-                        num_yes += 1
-                    else:
-                        num_no += 1
-                if num_no >= num_yes:
-                    samples_with_negative_judgement += 1
-                    element["judgement"] = "negative"
-                    MRR_negative += sample_MRR
-                    Precision_negative += sample_P
+                # if no negated sentences in batch
+                if all(s[0] == "" for s in sentences_b_negated):
+                    res_negated = [(float("nan"), float("nan"), "")] * args.batch_size
+                # eval negated batch
                 else:
-                    samples_with_positive_judgement += 1
-                    element["judgement"] = "positive"
-                    MRR_positive += sample_MRR
-                    Precision_positivie += sample_P
+                    (
+                        original_log_probs_list_negated,
+                        token_ids_list_negated,
+                        masked_indices_list_negated,
+                    ) = model.get_batch_generation(sentences_b_negated, logger=logger)
+                    if vocab_subset is not None:
+                        # filter log_probs
+                        filtered_log_probs_list_negated = model.filter_logprobs(
+                            original_log_probs_list_negated, filter_logprob_indices
+                        )
+                    else:
+                        filtered_log_probs_list_negated = original_log_probs_list_negated
 
-            list_of_results.append(element)
-        gc.collect()
-    pool.close()
-    pool.join()
+                    arguments = [
+                        {
+                            "log_probs": filtered_log_probs,
+                            "log_probs_negated": filtered_log_probs_negated,
+                            "token_ids": token_ids,
+                            "vocab": model.vocab,
+                            "label_index": label_index[0],
+                            "masked_indices": masked_indices,
+                            "masked_indices_negated": masked_indices_negated,
+                            "index_list": index_list,
+                        }
+                        for filtered_log_probs, filtered_log_probs_negated, token_ids, masked_indices, masked_indices_negated, label_index in zip(
+                            filtered_log_probs_list,
+                            filtered_log_probs_list_negated,
+                            token_ids_list,
+                            masked_indices_list,
+                            masked_indices_list_negated,
+                            label_index_list,
+                        )
+                    ]
+                    res_negated = pool.map(run_thread_negated, arguments)
+            gc.collect()
+            for idx, result in enumerate(res):
+
+                result_masked_topk, sample_MRR, sample_P, sample_perplexity, msg = result
+
+                logger.info("\n" + msg + "\n")
+
+                sample = samples_b[idx]
+
+                element = {}
+                element["sample"] = sample
+                element["uuid"] = sample["uuid"]
+                element["token_ids"] = token_ids_list[idx]
+                element["masked_indices"] = masked_indices_list[idx]
+                element["label_index"] = label_index_list[idx]
+                element["masked_topk"] = result_masked_topk
+                element["sample_MRR"] = sample_MRR
+                element["sample_Precision"] = sample_P
+                element["sample_perplexity"] = sample_perplexity
+                element["sample_Precision1"] = result_masked_topk["P_AT_1"]
+
+                # print()
+                # print("idx: {}".format(idx))
+                # print("masked_entity: {}".format(result_masked_topk['masked_entity']))
+                # for yi in range(10):
+                #     print("\t{} {}".format(yi,result_masked_topk['topk'][yi]))
+                # print("masked_indices_list: {}".format(masked_indices_list[idx]))
+                # print("sample_MRR: {}".format(sample_MRR))
+                # print("sample_P: {}".format(sample_P))
+                # print("sample: {}".format(sample))
+                # print()
+
+                if args.use_negated_probes:
+                    overlap, spearman, msg = res_negated[idx]
+                    # sum overlap and spearmanr if not nan
+                    if spearman == spearman:
+                        element["spearmanr"] = spearman
+                        element["overlap"] = overlap
+                        Overlap += overlap
+                        Spearman += spearman
+                        num_valid_negation += 1.0
+
+                MRR += sample_MRR
+                Precision += sample_P
+                Precision1 += element["sample_Precision1"]
+
+                # the judgment of the annotators recording whether they are
+                # evidence in the sentence that indicates a relation between two entities.
+                num_yes = 0
+                num_no = 0
+
+                if "judgments" in sample:
+                    # only for Google-RE
+                    for x in sample["judgments"]:
+                        if x["judgment"] == "yes":
+                            num_yes += 1
+                        else:
+                            num_no += 1
+                    if num_no >= num_yes:
+                        samples_with_negative_judgement += 1
+                        element["judgement"] = "negative"
+                        MRR_negative += sample_MRR
+                        Precision_negative += sample_P
+                    else:
+                        samples_with_positive_judgement += 1
+                        element["judgement"] = "positive"
+                        MRR_positive += sample_MRR
+                        Precision_positivie += sample_P
+
+                list_of_results.append(element)
+            gc.collect()
+        pool.close()
+        pool.join()
 
     # stats
     # Mean reciprocal rank
