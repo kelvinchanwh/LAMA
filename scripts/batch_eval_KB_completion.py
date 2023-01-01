@@ -336,6 +336,8 @@ def main(args, shuffle_data=True, model=None):
         model_name = "ELMo_{}".format(args.elmo_model_name)
     elif model_type_name == "t5":
         model_name = "T5_{}".format(args.t5_model_name)
+    elif model_type_name == "mt5":
+        model_name = "mT5_{}".format(args.mt5_model_name)
     else:
         model_name = model_type_name.title()
 
@@ -351,7 +353,7 @@ def main(args, shuffle_data=True, model=None):
     vocab_subset = None
     index_list = None
     msg += "args: {}\n".format(args)
-    if args.common_vocab_filename is not None and model_type_name != "t5":
+    if args.common_vocab_filename is not None and model_type_name != "t5" and model_type_name != "mt5":
         vocab_subset = load_vocab(args.common_vocab_filename)
         msg += "common vocabulary size: {}\n".format(len(vocab_subset))
 
@@ -404,7 +406,7 @@ def main(args, shuffle_data=True, model=None):
         # keep samples as they are
         all_samples = data
 
-    if model_type_name != "t5":
+    if model_type_name != "t5" and model_type_name != "mt5":
         all_samples, ret_msg = filter_samples(
             model, data, vocab_subset, args.max_sentence_length, args.template
         )
@@ -482,7 +484,7 @@ def main(args, shuffle_data=True, model=None):
 
         samples_b = samples_batches[i]
         sentences_b = sentences_batches[i]
-        if model_type_name == "t5":
+        if model_type_name == "t5" or model_type_name == "mt5":
             for sample, sentence in zip(samples_b, sentences_b):
                 sentence = sentence[0].replace("[MASK]", "<extra_id_0>") + " </s>"
                 input_ids = model.get_id(sentence)
