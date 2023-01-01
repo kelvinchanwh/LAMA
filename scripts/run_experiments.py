@@ -42,6 +42,27 @@ LMs = [
         "lowercase": False,
     },
     {
+        "lm": "mt5",
+        "label": "mt5_small",
+        "models_names": ["mt5"],
+        "t5_model_name": "google/mt5-small",
+        "lowercase": False,
+    },
+    {
+        "lm": "mt5",
+        "label": "mt5_base",
+        "models_names": ["mt5"],
+        "t5_model_name": "google/mt5-base",
+        "lowercase": False,
+    },
+    {
+        "lm": "mt5",
+        "label": "mt5_large",
+        "models_names": ["mt5"],
+        "t5_model_name": "google/mt5-large",
+        "lowercase": False,
+    },
+    {
         "lm": "bert",
         "label": "bert_base",
         "models_names": ["bert"],

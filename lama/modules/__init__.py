@@ -10,6 +10,7 @@ from .gpt_connector import GPT
 from .transformerxl_connector import TransformerXL
 from .roberta_connector import Roberta
 from .t5_connector import T5
+from .mt5_connector import MT5
 
 
 def build_model_by_name(lm, args, verbose=True):
@@ -24,7 +25,8 @@ def build_model_by_name(lm, args, verbose=True):
         gpt=GPT,
         transformerxl=TransformerXL,
         roberta=Roberta,
-        t5 = T5
+        t5 = T5,
+        mt5 = MT5
     )
     if lm not in MODEL_NAME_TO_CLASS:
         raise ValueError("Unrecognized Language Model: %s." % lm)
